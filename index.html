@@ -1,120 +1,369 @@
 <!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Taryfikator Mechanik</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mechanik — Taryfikator usług</title>
+  <style>
+    :root{--accent:#2b7a78;--accent-dark:#205e5d;--bg:#f7f9fb}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg);color:#0b1820}
+    .container{max-width:900px;margin:32px auto;padding:20px;background:white;border-radius:10px;box-shadow:0 6px 18px rgba(11,24,32,0.06)}
+    h1{margin:0 0 8px;color:var(--accent-dark)}
+    p.lead{margin-top:0;color:#445}
+    .services{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
+    .group{border:1px solid #e6eef0;padding:12px;border-radius:8px;background:#fcfeff}
+    .group h3{margin:0 0 8px;font-size:1.05rem;color:var(--accent)}
+    .item{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px dashed #eef4f5}
+    .item:first-of-type{border-top:0}
+    .item label{flex:1;display:flex;align-items:center;gap:12px}
+    .price-select, .qty, .custom-price{width:110px;padding:6px;border:1px solid #d6e3e4;border-radius:6px}
+    .qty{width:72px}
+    .summary{margin-top:18px;padding:12px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfeff);border:1px solid #e6eef0;display:flex;align-items:center;justify-content:space-between}
+    .total{font-size:1.45rem;color:var(--accent-dark);font-weight:700}
+    .breakdown{margin-top:12px;font-size:0.95rem;color:#233}
+    .controls{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#e6f3f2;color:var(--accent-dark)}
+    .note{font-size:0.9rem;color:#556; margin-top:8px}
+    footer{margin-top:20px;font-size:0.85rem;color:#667}
+    @media(min-width:700px){ .services{grid-template-columns:1fr 1fr} }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Taryfikator Mechanik</h1>
-    <p>Wybierz usterki/naprawy, ustaw ilość (liczba sztuk/instancji) i oblicz orientacyjny koszt.</p>
-  </header>
+  <div class="container">
+    <h1>Warszawa RP — Taryfikator usług mechanicznych</h1>
+    <p class="lead">Zaznacz usługi, wybierz opcję ceny (jeżeli dostępne) i od razu zobacz sumę.</p>
 
-  <main class="container">
-    <section class="accordion">
-      <button class="accordion-btn">Silnik</button>
-      <div class="panel">
-        <div class="item" data-min="500" data-max="2000">
-          <label><input type="checkbox" class="chk"> Wymiana świec zapłonowych</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 500 do 2000 PLN</div>
+    <div class="services">
+
+      <div class="group">
+        <h3>🔍 Diagnostyka & podstawowe usługi</h3>
+
+        <div class="item">
+          <input type="checkbox" id="diag-komp" data-type="select">
+          <label for="diag-komp">
+            <span>🚗 Diagnostyka komputerowa</span>
+            <select class="price-select" data-default="140">
+              <option value="80">80 zł</option>
+              <option value="140" selected>140 zł (średnia)</option>
+              <option value="200">200 zł</option>
+            </select>
+          </label>
         </div>
 
-        <div class="item" data-min="1500" data-max="8000">
-          <label><input type="checkbox" class="chk"> Remont głowicy / uszczelka pod głowicą</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 1500 do 8000 PLN</div>
+        <div class="item">
+          <input type="checkbox" id="diag-mech" data-price="100">
+          <label for="diag-mech">
+            <span>🔧 Diagnostyka mechaniczna</span>
+            <input class="custom-price" type="number" value="100" min="0" step="1" aria-label="cena diagnostyka mechaniczna" />
+          </label>
         </div>
 
-        <div class="item" data-min="300" data-max="1200">
-          <label><input type="checkbox" class="chk"> Wymiana paska rozrządu</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 300 do 1200 PLN</div>
+        <div class="item">
+          <input type="checkbox" id="przeglad-przed">
+          <label for="przeglad-przed">
+            <span>⛽ Przegląd przed zakupem auta</span>
+            <select class="price-select">
+              <option value="200">200 zł</option>
+              <option value="250">250 zł</option>
+              <option value="300">300 zł</option>
+            </select>
+          </label>
         </div>
       </div>
-    </section>
-    
-    <section class="accordion">
-      <button class="accordion-btn">Hamulce</button>
-      <div class="panel">
-        <div class="item" data-min="200" data-max="800">
-          <label><input type="checkbox" class="chk"> Wymiana klocków hamulcowych (zestaw)</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 200 do 800 PLN</div>
+
+      <div class="group">
+        <h3>🛢️ Oleje i filtry</h3>
+
+        <div class="item">
+          <input type="checkbox" id="wym-olej" >
+          <label for="wym-olej">
+            <span>🛢️ Wymiana oleju + filtr</span>
+            <select class="price-select">
+              <option value="100">100 zł</option>
+              <option value="200" selected>200 zł</option>
+              <option value="300">300 zł</option>
+            </select>
+          </label>
         </div>
 
-        <div class="item" data-min="500" data-max="2500">
-          <label><input type="checkbox" class="chk"> Wymiana tarcz hamulcowych</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 500 do 2500 PLN</div>
+        <div class="item">
+          <input type="checkbox" id="wym-olej-man">
+          <label for="wym-olej-man">
+            <span>🔁 Wymiana oleju w skrzyni manualnej</span>
+            <select class="price-select">
+              <option value="120">120 zł</option>
+              <option value="140">140 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="wym-olej-auto">
+          <label for="wym-olej-auto">
+            <span>🔁 Wymiana oleju w automacie</span>
+            <select class="price-select">
+              <option value="150">150 zł</option>
+              <option value="175">175 zł</option>
+              <option value="200">200 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="dynamic-ATF">
+          <label for="dynamic-ATF">
+            <span>🔁 Dynamiczna wymiana oleju (ATF)</span>
+            <select class="price-select">
+              <option value="350">350 zł</option>
+              <option value="450">450 zł</option>
+              <option value="600">600 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="filtr-kabinowy">
+          <label for="filtr-kabinowy">
+            <span>🌬️ Wymiana filtra kabinowego</span>
+            <select class="price-select">
+              <option value="20">20 zł</option>
+              <option value="35" selected>35 zł</option>
+              <option value="50">50 zł</option>
+            </select>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="group">
+        <h3>🛞 Układ hamulcowy</h3>
+
+        <div class="item">
+          <input type="checkbox" id="klocki">
+          <label for="klocki">
+            <span>🛑 Klocki hamulcowe (komplet)</span>
+            <select class="price-select">
+              <option value="100">100 zł</option>
+              <option value="175" selected>175 zł</option>
+              <option value="250">250 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="tarcze-klocki">
+          <label for="tarcze-klocki">
+            <span>🛑 Tarcze + klocki (1 oś)</span>
+            <select class="price-select">
+              <option value="180">180 zł</option>
+              <option value="215" selected>215 zł</option>
+              <option value="250">250 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="plyn-hamulcowy">
+          <label for="plyn-hamulcowy">
+            <span>💧 Wymiana płynu hamulcowego</span>
+            <select class="price-select">
+              <option value="70">70 zł</option>
+              <option value="135" selected>135 zł</option>
+              <option value="200">200 zł</option>
+            </select>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="group">
+        <h3>🛠️ Zawieszenie & inne naprawy</h3>
+
+        <div class="item">
+          <input type="checkbox" id="amortyzator">
+          <label for="amortyzator">
+            <span>🔩 Wymiana amortyzatora (1 szt.)</span>
+            <select class="price-select">
+              <option value="150">150 zł</option>
+              <option value="250">250 zł</option>
+              <option value="350">350 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="drazki">
+          <label for="drazki">
+            <span>🔩 Wymiana drążków / elementów zawieszenia</span>
+            <select class="price-select">
+              <option value="70">70 zł</option>
+              <option value="135" selected>135 zł</option>
+              <option value="200">200 zł</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="item">
+          <input type="checkbox" id="lozysko-kola">
+          <label for="lozysko-kola">
+            <span>📏 Wymiana łożyska koła (1 szt.)</span>
+            <select class="price-select">
+              <option value="200">200 zł</option>
+              <option value="300">300 zł</option>
+            </select>
+          </label>
         </div>
       </div>
-    </section>
-    
-    <section class="accordion">
-      <button class="accordion-btn">Zawieszenie</button>
-      <div class="panel">
-        <div class="item" data-min="150" data-max="700">
-          <label><input type="checkbox" class="chk"> Wymiana amortyzatorów (szt.)</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 150 do 700 PLN</div>
+
+      <div class="group">
+        <h3>🚗 Naprawy silnika / układu napędowego</h3>
+
+        <div class="item">
+          <input type="checkbox" id="sprzeglo">
+          <label for="sprzeglo">
+            <span>🛠️ Wymiana sprzęgła (bez części)</span>
+            <input class="custom-price" type="number" min="0" value="600" />
+          </label>
         </div>
 
-        <div class="item" data-min="100" data-max="500">
-          <label><input type="checkbox" class="chk"> Naprawa wahacza</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 100 do 500 PLN</div>
+        <div class="item">
+          <input type="checkbox" id="rozrzad">
+          <label for="rozrzad">
+            <span>🛠️ Rozrząd (pasek + rolki)</span>
+            <input class="custom-price" type="number" min="0" value="700" />
+          </label>
         </div>
+
+        <div class="item">
+          <input type="checkbox" id="uszczelka">
+          <label for="uszczelka">
+            <span>🔧 Uszczelka głowicy</span>
+            <input class="custom-price" type="number" min="0" value="1200" />
+          </label>
+        </div>
+
       </div>
-    </section>
-    <section class="accordion">
-      <button class="accordion-btn">Elektryka</button>
-      <div class="panel">
-        <div class="item" data-min="200" data-max="1200">
-          <label><input type="checkbox" class="chk"> Wymiana alternatora</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 200 do 1200 PLN</div>
-        </div>
 
-        <div class="item" data-min="100" data-max="600">
-          <label><input type="checkbox" class="chk"> Naprawa instalacji elektrycznej</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 100 do 600 PLN</div>
-        </div>
+    </div>
+
+    <div class="group" style="margin-top:14px;">
+      <h3>🕐 Robocizna</h3>
+      <div class="controls">
+        <label>
+          Stawka za godzinę:
+          <input id="hour-rate" class="custom-price" type="number" min="0" value="120" /> zł
+        </label>
+        <label>
+          Szacowane godziny:
+          <input id="hours" class="qty" type="number" min="0" value="1" step="0.5" /> h
+        </label>
+
+        <button id="reset" class="btn secondary">Wyczyść zaznaczenia</button>
       </div>
-    </section>
-    
-    <section class="accordion">
-      <button class="accordion-btn">Karoseria</button>
-      <div class="panel">
-        <div class="item" data-min="300" data-max="2000">
-          <label><input type="checkbox" class="chk"> Lakierowanie zderzaka</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 300 do 2000 PLN</div>
-        </div>
+      <div class="note">Stawki godzinowe orientacyjne: 120 – 150 zł/godz.</div>
+    </div>
 
-        <div class="item" data-min="500" data-max="4000">
-          <label><input type="checkbox" class="chk"> Naprawa wgniecenia / blacharka</label>
-          <input type="number" class="qty" min="1" value="1">
-          <div class="range">Koszt: od 500 do 4000 PLN</div>
-        </div>
+    <div class="summary" aria-live="polite">
+      <div>
+        <div class="breakdown" id="breakdown">Brak zaznaczonych usług</div>
+        <div class="note">Kliknij pozycję żeby dodać do sumy. Możesz zmienić cenę ręcznie.</div>
       </div>
-    </section>
-
-    <div class="controls">
-      <button id="calc">Oblicz</button>
-      <button id="reset">Resetuj</button>
-      <div id="summary">
-                <div>Wybrane pozycji: <span id="count">0</span></div>
-        <div>Suma orientacyjna: <span id="sum">0</span> PLN</div>
-        <div>Zakres: <span id="minSum">0</span> — <span id="maxSum">0</span> PLN</div>
+      <div>
+        <div>Łącznie:</div>
+        <div class="total" id="total">0 zł</div>
       </div>
     </div>
 
-  </main>
+    <footer>
+      <small>Opis i ceny orientacyjne — mechanik warszawa. Ceny nie zawierają części (chyba że zaznaczono inaczej).</small>
+    </footer>
+  </div>
 
-  <script src="script.js"></script>
+  <script>
+    function formatPLN(v){ return Number(v).toLocaleString('pl-PL',{style:'currency',currency:'PLN',maximumFractionDigits:0}) }
+    const container = document.querySelector('.container');
+    const totalEl = document.getElementById('total');
+    const breakdownEl = document.getElementById('breakdown');
+    const hourRateEl = document.getElementById('hour-rate');
+    const hoursEl = document.getElementById('hours');
+    const resetBtn = document.getElementById('reset');
+
+    function recalc(){
+      const items = Array.from(document.querySelectorAll('.item'));
+      let total = 0;
+      let lines = [];
+
+      items.forEach(it=>{
+        const checkbox = it.querySelector('input[type="checkbox"]');
+        if(!checkbox) return;
+        if(!checkbox.checked) return;
+
+        // try select first
+        const select = it.querySelector('.price-select');
+        const custom = it.querySelector('.custom-price');
+        let price = 0;
+        if(select){
+          price = Number(select.value) || 0;
+        } else if(custom){
+          price = Number(custom.value) || 0;
+        } else if(checkbox.dataset.price){
+          price = Number(checkbox.dataset.price) || 0;
+        }
+        // quantity support (if present)
+        const qty = Number(it.querySelector('.qty') ? it.querySelector('.qty').value : 1) || 1;
+        const subtotal = price * qty;
+        total += subtotal;
+        const label = it.querySelector('label span') ? it.querySelector('label span').innerText : it.querySelector('label').innerText;
+        lines.push(`${label.trim()}: ${formatPLN(subtotal)}`);
+      });
+
+      // robocizna
+      const hours = Number(hoursEl.value) || 0;
+      const rate = Number(hourRateEl.value) || 0;
+      const labor = hours * rate;
+      if(hours > 0 && rate > 0){
+        total += labor;
+        lines.push(`Robocizna (${hours}h × ${formatPLN(rate)}): ${formatPLN(labor)}`);
+      }
+
+      totalEl.textContent = formatPLN(total);
+      if(lines.length) breakdownEl.innerHTML = lines.join('<br>');
+      else breakdownEl.textContent = 'Brak zaznaczonych usług';
+    }
+
+    // attach listeners
+    container.addEventListener('change', (e)=>{
+      // when checkbox toggled, if row has custom-price, enable/disable it visually
+      if(e.target.type === 'checkbox'){
+        const row = e.target.closest('.item');
+        if(row){
+          const inputs = row.querySelectorAll('select, input.custom-price, input.qty');
+          inputs.forEach(inp => inp.disabled = !e.target.checked && inp.classList.contains('custom-price') ? false : false);
+        }
+      }
+      recalc();
+    });
+
+    // also update when price inputs changed
+    container.addEventListener('input', (e)=> recalc());
+
+    // reset button
+    resetBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.item input[type="checkbox"]').forEach(cb => cb.checked = false);
+      // reset selects to their defaults if needed
+      document.querySelectorAll('.price-select').forEach(s => {
+        const def = s.getAttribute('data-default');
+        if(def) s.value = def;
+      });
+      // reset hours to 1
+      hoursEl.value = 1;
+      hourRateEl.value = 120;
+      recalc();
+    });
+
+    // initial calc
+    recalc();
+  </script>
 </body>
-            </html>
+</html>
