@@ -560,12 +560,11 @@
         const custom = it.querySelector('.custom-price');
         let price = 0;
         if(select){
-          price = Number(select.value) || 0;
-        } else if(custom){
-          price = Number(custom.value) || 0;
-        } else if(checkbox.dataset.price){
-          price = Number(checkbox.dataset.price) || 0;
-        }
+          price += Number(select.value) || 0;
+        } 
+        if(custom){
+          price += Number(custom.value) || 0;
+        } 
         // quantity support (if present)
         const qty = Number(it.querySelector('.qty') ? it.querySelector('.qty').value : 1) || 1;
         const subtotal = price * qty;
